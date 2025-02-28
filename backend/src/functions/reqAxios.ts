@@ -2,6 +2,6 @@ import axios from 'axios';
 
 export default function createInstanceAxios() {
     return axios.create({
-        baseURL: 'http://ipN8N/webhook'
-    });
+        baseURL :  process.env.N8NWEBHOOK
+    }); 
 }
