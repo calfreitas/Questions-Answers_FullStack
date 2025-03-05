@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import createInstanceAxios from "../Components/axios";
 import * as THREE from "three";
 import NET from "vanta/dist/vanta.net.min.js";
+import { redirect, useNavigate } from "react-router-dom";
 
 const axiosInstance = createInstanceAxios();
 
@@ -19,15 +20,12 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
-
     const togglePassword = () => {
         setShowPassword(!showPassword);
     };
-
-
     const vantaRef = useRef<HTMLDivElement | null>(null);
-    
+    const navigate = useNavigate();
+
     useEffect(() => {
       if (!vantaRef.current) return;
     
@@ -61,9 +59,9 @@ function Login() {
 
                 // Aguardar 2 segundos antes de executar o próximo código
                 await sleep(2000);
-
                 console.log('Isso será executado após 2 segundos');
                 setLoading(false);  // Defina o loading como false após o delay
+                navigate('/Questions')
             } else {
                 setLoading(false);
                 return null;
