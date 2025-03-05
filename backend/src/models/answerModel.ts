@@ -1,3 +1,4 @@
+import { isPropertyAccessChain } from "typescript";
 import prisma from "../functions/prisma";
 import createInstanceAxios from '../functions/reqAxios';
 
@@ -35,10 +36,11 @@ export async function postAnswersModel(id: number, answer: string) {
 
   } catch (error) {
     console.error("Erro ao responder questão:", error);
-    //await sendToN8N(id, `Não foi possível processar uma de suas perguntas, favor contatar com o time de engenharia ou tente enviar uma nova mensagem ao Siden ${id}.`);
+    await sendToN8N(id, `Não foi possível processar uma de suas perguntas, favor contatar com o time de engenharia ou tente enviar uma nova mensagem ao Siden ${id}.`);
     return null;
 
   } finally {
+    sendToN8N(id, answer)
     await prisma.$disconnect();
 
   }
@@ -68,7 +70,10 @@ export async function sendToN8N(id: number, answer: string) {
       cellphone: question.cellphone
     };
 
-    const response = await axios.post("/endpointN8NWebhook", payload);
+    console.log('N8N Webhook', process.env.N8N_WEBHOOK)
+    console.log("Payload", payload)
+
+    const response = await axios.post("/bc32d959-6d31-48df-8db9-491276a2490d", payload);
     console.log("Enviado para o n8n com sucesso:", response.data);
     return response.data;
   } catch (error) {

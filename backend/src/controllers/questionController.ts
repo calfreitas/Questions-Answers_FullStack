@@ -10,4 +10,4 @@ export class questionController {
       res.status(500).json({ error: "Erro ao buscar perguntas." });
     }
   }
-} 
+}
