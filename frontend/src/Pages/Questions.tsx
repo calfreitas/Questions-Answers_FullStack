@@ -29,10 +29,8 @@ function App() {
     try {
       const response = await axiosInstance.get('/questions/getUnanswered');
       setAllQuestions(response.data);
-      console.log('resposta')
       setLoading(false);
     } catch (error) {
-      console.error("Erro ao buscar perguntas:", error);
       setAllQuestions([]);
       setLoading(false);
     }
@@ -93,7 +91,6 @@ function App() {
 
         {/*div da resposta*/}
         <div className="w-2/3 max-h-screen  bg-gray-900 flex flex-col items-center justify-center p-10 gap-10 border-s-2 ">
-        {/* Criar arquivo para logo e referenciar caso queira. */}
           <LogoImageBackground /> --
           <div className="w-full text-center text-lg  text-white font-semibold z-10">
             <p className="text-white">Cadastro de Respostas</p>

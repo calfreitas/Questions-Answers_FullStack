@@ -29,3 +29,5 @@ frontend/public/logo.png
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*:Zone.Identifier
+
