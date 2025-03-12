@@ -11,10 +11,19 @@ export class answerController {
 
     const { id, answer } = req.body as Props;
 
-    const answers = await postAnswersModel( id, answer );
+    if (!id || !answer) {
+      res.status(400).json({ error: "id ou resposta vazio" });
+      return; 
+    }
 
-    if (!answers) res.status(400).json({ error: "Erro ao responder a questão." });
+    const answers = await postAnswersModel(id, answer);
 
-    res.json(answers);
+    if (!answers) {
+      res.status(400).json({ error: "Erro ao responder a questão." });
+      return;
+    }
+
+    res.status(200).json({ answer });
+    return;
   }
 }

@@ -1,17 +1,18 @@
 import express from "express";
 import { questionController } from "./controllers/questionController";
 import { answerController } from "./controllers/answerController";
-import { AuthService } from "./controllers/authController";
+import { authController } from "./controllers/authController";
+import { authenticateToken } from "./middleware/auth/jwtAuth";
 
 const router = express.Router();
 
-//Questions
-router.get("/questions/getUnanswered", questionController.getUnansweredQuestions);
+//Auth
+router.post('/loginAuth', authController.postLogin);
 
 //Answers
-router.post("/answers/postAnswer", answerController.postAnswerController);
+router.post("/answers/postAnswer", authenticateToken, answerController.postAnswerController);
 
-//Auth
-router.post('/loginAuth', async (req,res) => {await AuthService.postLogin(req,res)});
+//Questions
+router.get("/questions/getUnanswered", authenticateToken, questionController.getUnansweredQuestions);
 
 export default router;
