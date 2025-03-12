@@ -1,5 +1,3 @@
-// import createInstanceAxios from "../../reqAxios/axios";
-
 import { Eye, EyeClosed, RefreshCcw } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import createInstanceAxios from "../Components/axios";
@@ -15,7 +13,7 @@ interface Props {
 }
 
 function Login() {
-
+  
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
@@ -33,7 +31,7 @@ function Login() {
       el: vantaRef.current,
       THREE: THREE,
       color: 0x00CED1, // Cor da rede
-      backgroundColor: 0x111827, // Cor de fundo
+      backgroundColor: 0x111827, 
       points: 10, // Quantidade de pontos
       maxDistance: 20, // Distância máxima entre as conexões
       spacing: 15, // Espaçamento entre pontos

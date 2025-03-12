@@ -7,13 +7,15 @@ import LogoImageBackground from '../Components/sidenLogoDash';
 
 const axiosInstance = createInstanceAxios();
 
+
 interface Question {
   question: string;
   id: number;
   answer: string;
 };
 
-function App() {
+function Questions() {
+  const token = localStorage.getItem("token");
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
   const [selectQuestion, setSelectQuestion] = useState<any>();
   const [loading, setLoading] = useState(false);
@@ -27,7 +29,11 @@ function App() {
     setLoading(true);
     setAllQuestions([]);
     try {
-      const response = await axiosInstance.get('/questions/getUnanswered');
+      const response = await axiosInstance.get('/questions/getUnanswered', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setAllQuestions(response.data);
       setLoading(false);
     } catch (error) {
@@ -138,4 +144,4 @@ function App() {
   );
 }
 
-export default App;
+export default Questions;
