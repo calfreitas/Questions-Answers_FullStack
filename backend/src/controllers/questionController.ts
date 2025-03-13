@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { getQuestionsWithoutAnswersModel } from "../models/questionModel";
+import { selectQuestionsWithoutAnswersModel } from "../models/questionModel";
 
 export class questionController {
   static async getUnansweredQuestions(req: Request, res: Response) {
-    const questions = await getQuestionsWithoutAnswersModel();
+    const questions = await selectQuestionsWithoutAnswersModel();
     if (questions) {
       res.json(questions);
     } else {

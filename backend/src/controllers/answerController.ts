@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { postAnswersModel } from "../models/answerModel";
+import { updateAnswersModel } from "../models/answerModel";
 
 interface Props {
   id: number;
@@ -16,7 +16,7 @@ export class answerController {
       return; 
     }
 
-    const answers = await postAnswersModel(id, answer);
+    const answers = await updateAnswersModel(id, answer);
 
     if (!answers) {
       res.status(400).json({ error: "Erro ao responder a questão." });
@@ -26,4 +26,10 @@ export class answerController {
     res.status(200).json({ answer });
     return;
   }
+}
+
+export class answerManagerController {
+  static async getAllAnswers(req: Request, res: Response) {
+    
+  } 
 }

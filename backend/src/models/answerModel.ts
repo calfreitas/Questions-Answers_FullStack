@@ -3,7 +3,7 @@ import createInstanceAxios from '../functions/reqAxios';
 
 const axios = createInstanceAxios();
 
-export async function postAnswersModel(id: number, answer: string) {
+export async function updateAnswersModel(id: number, answer: string) {
   try {
 
     const existingAnswer = await prisma.questions.findUnique({
