@@ -4,79 +4,55 @@ import prisma from "../functions/prisma";
 export async function selectQuestionsWithoutAnswersModel() {
   try {
     const allQuestionsWithoutAnswer = await prisma.questions.findMany({
-      where: {
-        answer: null,
-      },
+      where: { answer: null },
       select: {
         id: true,
         question: true,
         answer: true,
       }
     });
-    //console.log('passei no MODEL');
     return allQuestionsWithoutAnswer;
+
   } catch (error) {
     console.error("Erro ao buscar questões:", error);
     return null;
-  } finally {
-    await prisma.$disconnect();
-  }
-}
-
-export async function selectQuestionsWithAnswerModel() {
-  try {
-    const allQuestionsWithAnswer = await prisma.questions.findMany({
-      where: {
-        answer: {
-          not: null
-        }
-      },
-      select: {
-        id: true,
-        question: true,
-        answer: true
-      }
-
-    });
-    return allQuestionsWithAnswer;
-
-  } catch (error) {
-    console.error("Erro ao buscar perguntas com respostas:", error);
-    return null;
 
   } finally {
     await prisma.$disconnect();
-  }
+
+  } 
 }
 
 // UPDATE
-export async function updateQuestionsWithAnswerModel(id: number, answer: string) {
+export async function updateQuestion( id: number, question: string ) {
   try {
-    const allQuestionsWithAnswerUpdate = await prisma.questions.update({
-      where: {
-        id
-      },
+    const questionUpdate = await prisma.questions.update({
+      where:{ id },
       data: {
-        answer
-      },
+        question
+      }
     });
-    return allQuestionsWithAnswerUpdate;
+    return questionUpdate
 
   } catch (error) {
-    console.error("Erro ao atualizar resposta: ", error);
+    console.error("Erro ao atualizar pergunta:", error)
     return null;
 
   } finally {
     await prisma.$disconnect();
+
   }
 }
 
 // DELETE
 export async function deleteQuestion(id: number) {
   try {
-    const deleteQuestionId = await prisma.questions.delete({
-      where: {
-        id
+    const dateTimeDel = new Date();
+    const deleteQuestionId = await prisma.questions.update({
+      where: { id },
+      data: {
+        is_active: false,
+        question_deleted_at: dateTimeDel
       }
     });
     return deleteQuestionId;
@@ -87,5 +63,6 @@ export async function deleteQuestion(id: number) {
 
   } finally {
     await prisma.$disconnect();
+
   }
 }
