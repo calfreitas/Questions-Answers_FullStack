@@ -1,22 +1,34 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../functions/prisma";
 
-// Destinado aos usuários do Siden
+// Destinado aos Usuário do Whatsapp
 
-export async function selectUserWpp() {
+type Result<T> = { success: true; data: T } | { success: false; error: string; statusCode: number };
+
+export async function selectUserWpp(): Promise<Result<object>> {
   try {
     const allUsers = await prisma.users_siden.findMany({
       where: { is_active: true },
       select: {
         id: true,
         name: true,
-        cellphone: true
+        cellphone: true,
       }
     });
-    return allUsers;
+    return { success: true, data: allUsers };
 
   } catch (error) {
     console.error("Erro ao recuperar os usuários do Siden");
-    return null;
+
+    if (error instanceof Prisma.PrismaClientValidationError) {
+      return { success: false, error: "Erro de validação: dados inválidos", statusCode: 400 };
+    };
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return { success: false, error: "Erro no banco de dados: " + error.message, statusCode: 500 };
+    };
+
+    return { success: false, error: "Erro desconhecido", statusCode: 500 };
 
   } finally {
     await prisma.$disconnect();
@@ -24,61 +36,129 @@ export async function selectUserWpp() {
   };
 };
 
-export async function updateUserWpp(id: number, name: string, cellphone: string) {
+export async function createUserWpp(name: string, cellphone: string, id_user_creation: number): Promise<Result<object>> {
   try {
-    const uptDate = new Date();
+    const existingUser = await prisma.users_siden.findFirst({
+      where: {
+        name,
+        cellphone,
+      },
+    });
+
+    if (existingUser) return { success: false, error: "Usuário já existe com esse nome e número de telefone.", statusCode: 409 };
+
+    const createUser = await prisma.users_siden.create({
+      data: {
+        name,
+        cellphone,
+        id_user_creation
+      }
+    });
+    return { success: true, data: createUser };
+
+  } catch (error) {
+    console.error("Não foi possível criar o usuario.");
+
+    if (error instanceof Prisma.PrismaClientValidationError) {
+      return { success: false, error: "Erro de validação: dados inválidos", statusCode: 400 };
+    };
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return { success: false, error: "Erro no banco de dados: " + error.message, statusCode: 500 };
+    };
+
+    return { success: false, error: "Erro desconhecido", statusCode: 500 };
+
+  } finally {
+    await prisma.$disconnect();
+
+  };
+};
+
+export async function updateUserWpp(id: number, name: string, cellphone: string): Promise<Result<object>> {
+  try {
     const uptUser = await prisma.users_siden.update({
       where: { id },
       data: {
         name,
         cellphone,
-        updated_at: uptDate
+        updated_at: new Date()
       }
     });
-    return uptUser;
+    return { success: true, data: uptUser };
 
   } catch (error) {
-    console.error("Erro ao atualizar o usuário: ", error)
+    console.error("Erro ao atualizar o usuário: ", error);
+
+    if (error instanceof Prisma.PrismaClientValidationError) {
+      return { success: false, error: "Erro de validação: dados inválidos", statusCode: 400 };
+    };
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return { success: false, error: "Erro no banco de dados: " + error.message, statusCode: 500 };
+    };
+
+    return { success: false, error: "Erro desconhecido", statusCode: 500 };
 
   } finally {
     await prisma.$disconnect();
+
   };
 };
 
-export async function deleteUserWpp(id: number) {
+export async function deleteUserWpp(id: number): Promise<Result<object>> {
   try {
-    const delDate = new Date();
     const delUser = await prisma.users_siden.update({
       where: { id },
       data: {
         is_active: false,
-        deleted_at: delDate
+        deleted_at: new Date()
       }
     });
-    return delUser;
+    return { success: true, data: delUser };
 
   } catch (error) {
     console.error("Erro ao deletar usuário", error);
 
+    if (error instanceof Prisma.PrismaClientValidationError) {
+      return { success: false, error: "Erro de validação: dados inválidos", statusCode: 400 };
+    };
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return { success: false, error: "Erro no banco de dados: " + error.message, statusCode: 500 };
+    };
+
+    return { success: false, error: "Erro desconhecido", statusCode: 500 };
+
   } finally {
     await prisma.$disconnect();
+
   };
 };
 
-export async function reactivateUserWpp(id: number) {
+export async function reactivateUserWpp(id: number): Promise<Result<object>> {
   try {
-    const uptReactivate = new Date();
     const reactivateUser = await prisma.users_siden.update({
       where: { id },
       data: {
         is_active: true,
-        updated_at: uptReactivate
+        updated_at: new Date()
       }
     });
-    return reactivateUser;
+    return { success: true, data: reactivateUser };
 
   } catch (error) {
     console.error("Erro ao reativar usuário: ", error);
+
+    if (error instanceof Prisma.PrismaClientValidationError) {
+      return { success: false, error: "Erro de validação: dados inválidos", statusCode: 400 };
+    };
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return { success: false, error: "Erro no banco de dados: " + error.message, statusCode: 500 };
+    };
+
+    return { success: false, error: "Erro desconhecido", statusCode: 500 };
 
   } finally {
     await prisma.$disconnect();

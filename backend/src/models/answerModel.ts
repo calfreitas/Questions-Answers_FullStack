@@ -32,7 +32,7 @@ export async function updateAnswersModel(id: number, answer: string) {
     return postAnswers;
 
   } catch (error) {
-    await sendToN8N(id, `Não foi possível processar uma de suas perguntas, favor contatar com o time de engenharia ou tente enviar uma nova mensagem ao Siden ${id}.`);
+    await sendToN8N(id, `Não foi possível processar uma de suas perguntas, favor contatar com o time de engenharia ou tente enviar uma nova mensagem ${id}.`);
     return null;
 
   } finally {

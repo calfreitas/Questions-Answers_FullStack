@@ -29,13 +29,13 @@ export class answerController {
   }
 
   static async getAllQuestionsWithAnswer(req: Request, res: Response) {
-    const allQuestionsWithAnswer = await selectQuestionsWithoutAnswersModel()
+    const allQuestionsWithAnswer = await selectQuestionsWithoutAnswersModel();
     if (allQuestionsWithAnswer) {
-      res.status(200).json(allQuestionsWithAnswer)
+      res.status(200).json(allQuestionsWithAnswer);
       return;
 
     } else {
-      res.status(500).json({ message: "erro ao buscar perguntas e respostas" })
+      res.status(500).json({ message: "erro ao buscar perguntas e respostas" });
       return;
 
     }
@@ -43,12 +43,12 @@ export class answerController {
 
   static async putQuestionAndAnswer(req: Request, res: Response) {
     const { id, question, answer } = req.body as Props;
-    const editQuestionOrAnswer = await updateQuestionsWithAnswerModel(id, answer, question)
+    const editQuestionOrAnswer = await updateQuestionsWithAnswerModel(id, answer, question);
     if (editQuestionOrAnswer) {
-      res.json({ message: "Registro alterado com sucesso", id, question, answer })
+      res.json({ message: "Registro alterado com sucesso", id, question, answer });
 
     } else {
-      res.status(500).json({ message: "Não foi possível alterar o registro." })
+      res.status(500).json({ message: "Não foi possível alterar o registro." });
 
     }
 

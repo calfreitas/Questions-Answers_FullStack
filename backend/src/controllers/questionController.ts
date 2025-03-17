@@ -34,7 +34,7 @@ export class questionController {
 
   static async deleteQuestionByID(req: Request, res: Response) {
     const { id } = req.body as Props;
-    if (!id) res.status(400).json({ message: "id não fornecido" })
+    if (!id) res.status(400).json({ message: "id não fornecido" });
 
     const delQuestionId = await deleteQuestion(id);
     if (delQuestionId) {
