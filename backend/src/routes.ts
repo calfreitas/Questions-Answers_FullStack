@@ -20,6 +20,7 @@ router.put("/users/putReactivateUser", authenticateToken, usersController.putRea
 //Answers
 router.get("/answers/getAllQuestionsWithAnswer", authenticateToken, answerController.getAllQuestionsWithAnswer); //
 router.post("/answers/postAnswer", authenticateToken, answerController.postAnswerController); //
+router.post("/answers/postN8N", authenticateToken, answerController.postSendToN8N) // 
 router.put("/answers/putQuestionOrAnswer", authenticateToken, answerController.putQuestionAndAnswer); //
 router.delete("/answers/deleteAnswer", authenticateToken, answerController.deleteAnswerByID); //
 

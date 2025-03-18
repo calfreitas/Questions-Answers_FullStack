@@ -8,7 +8,7 @@ export async function selectQuestionsWithoutAnswersModel() {
       select: {
         id: true,
         question: true,
-        answer: true,
+        answer: true, 
       }
     });
     return allQuestionsWithoutAnswer;

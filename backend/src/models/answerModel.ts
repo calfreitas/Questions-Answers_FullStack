@@ -1,30 +1,22 @@
 import prisma from "../functions/prisma";
-import createInstanceAxios from '../functions/reqAxios';
-
-const axios = createInstanceAxios();
 
 export async function updateAnswersModel(id: number, answer: string) {
   try {
 
     const existingAnswer = await prisma.questions.findUnique({
-      where: {
-        id,
-        answer: null
-      },
+      where: { id, answer: null },
       select: {
         id: true
       }
-    })
+    });
 
     if (!existingAnswer) return null;
 
     const postAnswers = await prisma.questions.update({
-      where: {
-        id
-      },
+      where: { id },
       data: {
         answer
-      },
+      }
     });
 
     if (!postAnswers) return null;
@@ -32,41 +24,6 @@ export async function updateAnswersModel(id: number, answer: string) {
     return postAnswers;
 
   } catch (error) {
-    await sendToN8N(id, `Não foi possível processar uma de suas perguntas, favor contatar com o time de engenharia ou tente enviar uma nova mensagem ${id}.`);
-    return null;
-
-  } finally {
-    sendToN8N(id, answer)
-    await prisma.$disconnect();
-
-  }
-}
-
-export async function sendToN8N(id: number, answer: string) {
-  try {
-    const question = await prisma.questions.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        question: true,
-        answer: true,
-        cellphone: true
-      },
-    });
-    if (!question) {
-      throw new Error("Questão não encontrada no banco.");
-    }
-    const payload = {
-      id: question.id,
-      question: question.question,
-      answer: answer,
-      cellphone: question.cellphone
-    };
-
-    const response = await axios.post("/routeN8N", payload);
-    return response.data;
-  } catch (error) {
-    console.error("Erro ao enviar para o n8n:", error);
     return null;
 
   } finally {
@@ -75,7 +32,7 @@ export async function sendToN8N(id: number, answer: string) {
   }
 }
 
-export async function selectQuestionsWithoutAnswersModel() {
+export async function selectQuestionsWithAnswersModel() {
   try {
     const allQuestionsWithAnswer = await prisma.questions.findMany({
       where: {
@@ -97,7 +54,7 @@ export async function selectQuestionsWithoutAnswersModel() {
 
   } finally {
     await prisma.$disconnect();
-    
+
   }
 }
 
@@ -149,3 +106,52 @@ export async function deleteAnswer(id: number) {
   }
 }
 
+export async function selectForServiceN8N(id: number) {
+  try {
+    const n8nDataAnswer = await prisma.questions.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        question: true,
+        answer: true, 
+        cellphone: true
+      }
+    });
+    return n8nDataAnswer;
+
+  } catch (error) {
+    console.error("Erro ao buscar perguntas com respostas ao N8N:", error);
+    return error;
+
+  } finally {
+    await prisma.$disconnect();
+
+  }
+}
+
+export async function selectForServiceS3AWS() {
+  try {
+    const allForServiceS3 = await prisma.questions.findMany({
+      where: {
+        answer: {
+          not: null
+        },
+        is_active: true
+      },
+      select: {
+        id: true,
+        question: true,
+        answer: true
+      }
+    });
+    return allForServiceS3;
+
+  } catch (error) {
+    console.error("Erro ao buscar perguntas com respostas:", error);
+    return error;
+
+  } finally {
+    await prisma.$disconnect();
+
+  }
+}

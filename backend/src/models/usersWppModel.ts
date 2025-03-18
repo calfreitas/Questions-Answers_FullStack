@@ -12,7 +12,7 @@ export async function selectUserWpp(): Promise<Result<object>> {
       select: {
         id: true,
         name: true,
-        cellphone: true,
+        cellphone: true, 
       }
     });
     return { success: true, data: allUsers };
