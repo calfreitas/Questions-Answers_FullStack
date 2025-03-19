@@ -21,8 +21,10 @@ function Questions() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (token) {
     getAllAQuestions();
-  }, []);
+  }
+  }, [token]);
 
   async function getAllAQuestions() {
     setSelectQuestion({ id: null, question: "", answer: "" });
@@ -87,7 +89,6 @@ function Questions() {
                   </button>
                 );
               }) : (
-
                 <p className="text-white font-semibold">Sem perguntas</p>
               )}
             </div>

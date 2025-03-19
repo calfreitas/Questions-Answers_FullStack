@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Questions from "./Pages/Questions";
 import Login from "./Pages/Login";
 import Header from "./Components/header";
+import UsersManagement from "./Pages/usersManagement";
 
 function AppContent() {
     const location = useLocation();
@@ -14,6 +15,7 @@ function AppContent() {
             <Routes>
                 <Route path="/" element={<Login />}></Route>
                 <Route path="/Questions" element={<Questions />} ></Route>
+                <Route path="/UsersManagement" element={<UsersManagement/>}></Route>
                 {/* <Route path="/"></Route> */}
             </Routes>
         </>
