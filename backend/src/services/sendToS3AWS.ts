@@ -1,5 +1,5 @@
 import createInstanceAxios from '../functions/reqAxios';
-import { Request, Response} from 'express';
+import { Request, Response } from 'express';
 import { selectForServiceS3AWS } from '../models/answerModel';
 
 
@@ -10,9 +10,9 @@ import { selectForServiceS3AWS } from '../models/answerModel';
 // precisa ser uma função que é ativada assim que chamada, não deve esperar nenhum parâmetro. 
 
 
- export default async function sendToS3AWS() {
-    const awaitSelect = await selectForServiceS3AWS();
-    if (!awaitSelect) return null;
+export default async function sendToS3AWS() {
+   const awaitSelect = await selectForServiceS3AWS();
+   if (!awaitSelect) return null;
 
-    console.log('cheguei aqui', awaitSelect)
- }
+   console.log('cheguei aqui', awaitSelect)
+}

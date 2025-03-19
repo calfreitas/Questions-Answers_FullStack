@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { selectUserWpp, updateUserWpp, deleteUserWpp, reactivateUserWpp, createUserWpp } from "../models/usersWppModel";
-
 interface Props {
     users: string;
     id: number;
@@ -13,7 +12,8 @@ export class usersController {
     static async getUsersWpp(req: Request, res: Response) {
         const users = await selectUserWpp();
         if (users.success) {
-            res.json({ message: "Usuários encontrados", data: users.data });
+            console.log(users)
+            res.json(users.data);
 
         } else {
             res.status(users.statusCode).json({ message: "Erro ao buscar os usuários", error: users.error });
