@@ -6,6 +6,7 @@ interface Props {
     name: string;
     cellphone: string;
     id_user_creation: number;
+    base: string;
 };
 
 export class usersController {
@@ -13,24 +14,25 @@ export class usersController {
         const users = await selectUserWpp();
         if (users.success) {
             console.log(users)
-            res.json(users.data);
+            { res.json(users.data); return; }
 
         } else {
-            res.status(users.statusCode).json({ message: "Erro ao buscar os usuários", error: users.error });
+            { res.status(users.statusCode).json({ message: "Erro ao buscar os usuários", error: users.error }); return; }
 
         };
     };
 
     static async postCreateUser(req: Request, res: Response) {
-        const { name, cellphone, id_user_creation } = req.body as Props;
-        if (cellphone.length > 12 || cellphone.length < 12) res.status(400).json({message: "O numero de telefone só pode conter 12 digitos 55(DDD)0000-0000"});
+        const { name, cellphone, id_user_creation, base } = req.body as Props;
+        if (cellphone.length > 12 || cellphone.length < 12) { res.status(400).json({ message: "O numero de telefone só pode conter 12 digitos 55(DDD)0000-0000" }); return; }
+        if (name.length == 0 || base.length < 4) { res.status(400).json({ message: "Erro ao cadastrar usuário" }); return; }
 
-        const createUser = await createUserWpp(name, cellphone, id_user_creation);
+        const createUser = await createUserWpp(name, cellphone, id_user_creation, base);
         if (createUser.success) {
-            res.json({ message: "Usuário criado com sucesso: ", name });
+            { res.json({ message: "Usuário criado com sucesso: ", name }); return; }
 
         } else {
-            res.status(createUser.statusCode).json({ message: "Erro ao criar usuario", error: createUser.error });
+            { res.status(createUser.statusCode).json({ message: "Erro ao criar usuario", error: createUser.error }); return; }
 
         };
     };

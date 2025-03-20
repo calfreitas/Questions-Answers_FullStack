@@ -13,6 +13,7 @@ export async function selectUserWpp(): Promise<Result<object>> {
         id: true,
         name: true,
         cellphone: true, 
+        base: true
       }
     });
     return { success: true, data: allUsers };
@@ -36,7 +37,7 @@ export async function selectUserWpp(): Promise<Result<object>> {
   };
 };
 
-export async function createUserWpp(name: string, cellphone: string, id_user_creation: number): Promise<Result<object>> {
+export async function createUserWpp(name: string, cellphone: string, id_user_creation: number, base: string): Promise<Result<object>> {
   try {
     const existingUser = await prisma.users_siden.findFirst({
       where: {
@@ -51,7 +52,8 @@ export async function createUserWpp(name: string, cellphone: string, id_user_cre
       data: {
         name,
         cellphone,
-        id_user_creation
+        id_user_creation,
+        base,
       }
     });
     return { success: true, data: createUser };

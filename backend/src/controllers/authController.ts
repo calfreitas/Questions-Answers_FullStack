@@ -14,28 +14,30 @@ export class authController {
         const { username, password } = req.body as Props;
         const validAttempts = await selectAttempts(username);
 
-        if (!username || !password) return res.status(400).json({ error: "Usuário e senha são obrigatórios" });
+        if (!username || !password) {
+            res.status(400).json({ error: "Usuário e senha são obrigatórios" }); return;
+        }
 
-        if (validAttempts?.loggin_attempts === 5) return res.status(400).json({ message: "O número de tentativas excedeu o permitido." });
+        if (validAttempts?.loggin_attempts === 5) { res.status(400).json({ message: "O número de tentativas excedeu o permitido." }); return; }
 
         try {
             const userData = await findUserByUsername(username) as Props;
-            if (!userData) return res.status(404).json({ message: "Login ou Senha incorretos" });
+            if (!userData) { res.status(404).json({ message: "Login ou Senha incorretos" }); return; }
 
             const checkPwd = await compare(password, userData.password);
             if (!checkPwd) {
-                if (!validAttempts) return res.status(400).json({ message: "Não foi possível verificar a quantidade de tentativas de acesso." });
+                if (!validAttempts) { res.status(400).json({ message: "Não foi possível verificar a quantidade de tentativas de acesso." }); return; }
                 const addingAttempts = (validAttempts?.loggin_attempts + 1);
                 await putAttempts(username, addingAttempts);
-                return res.status(401).json({ message: "Login ou Senha incorretos", addingAttempts });
+                { res.status(401).json({ message: "Login ou Senha incorretos", addingAttempts }); return; }
             };
 
             const token = generateToken(userData.username);
             await putAttempts(username, 0)
-            return res.status(200).json({ token });
+            { res.status(200).json({ token }); return; }
 
         } catch (error) {
-            return res.status(500).json({ message: "Erro ao processar o login", error });
+            { res.status(500).json({ message: "Erro ao processar o login", error }); return; }
         }
     }
 }
