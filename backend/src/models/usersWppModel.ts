@@ -39,14 +39,6 @@ export async function selectUserWpp(): Promise<Result<object>> {
 
 export async function createUserWpp(name: string, cellphone: string, id_user_creation: number, base: string): Promise<Result<object>> {
   try {
-    const existingUser = await prisma.users_siden.findFirst({
-      where: {
-        name,
-        cellphone,
-      },
-    });
-
-    if (existingUser) return { success: false, error: "Usuário já existe com esse nome e número de telefone.", statusCode: 409 };
 
     const createUser = await prisma.users_siden.create({
       data: {
@@ -77,13 +69,14 @@ export async function createUserWpp(name: string, cellphone: string, id_user_cre
   };
 };
 
-export async function updateUserWpp(id: number, name: string, cellphone: string): Promise<Result<object>> {
+export async function updateUserWpp(id: number, name: string, cellphone: string, base:string): Promise<Result<object>> {
   try {
     const uptUser = await prisma.users_siden.update({
       where: { id },
       data: {
         name,
         cellphone,
+        base,
         updated_at: new Date()
       }
     });

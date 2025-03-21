@@ -13,7 +13,7 @@ export class usersController {
     static async getUsersWpp(req: Request, res: Response) {
         const users = await selectUserWpp();
         if (users.success) {
-            console.log(users)
+
             { res.json(users.data); return; }
 
         } else {
@@ -24,27 +24,42 @@ export class usersController {
 
     static async postCreateUser(req: Request, res: Response) {
         const { name, cellphone, id_user_creation, base } = req.body as Props;
-        if (cellphone.length > 12 || cellphone.length < 12) { res.status(400).json({ message: "O numero de telefone só pode conter 12 digitos 55(DDD)0000-0000" }); return; }
-        if (name.length == 0 || base.length < 4) { res.status(400).json({ message: "Erro ao cadastrar usuário" }); return; }
+        if (!cellphone || cellphone.length !== 12) {
+            res.status(400).json({ message: "O número de telefone deve conter exatamente 12 dígitos (55DDD00000000)" });
+            return;
+        }
 
-        const createUser = await createUserWpp(name, cellphone, id_user_creation, base);
-        if (createUser.success) {
-            { res.json({ message: "Usuário criado com sucesso: ", name }); return; }
+        if (!name || name.length === 0 || !base || base.length < 4) {
+            res.status(400).json({ message: "Erro ao cadastrar usuário, verifique os dados enviados." });
+            return;
+        }
 
-        } else {
-            { res.status(createUser.statusCode).json({ message: "Erro ao criar usuario", error: createUser.error }); return; }
+        try {
+            const createUser = await createUserWpp(name, cellphone, id_user_creation, base);
 
-        };
-    };
+            if (createUser.success) {
+                res.json({ message: "Usuário criado com sucesso", name });
+                return;
+            } else {
+                res.status(createUser.statusCode).json({ message: "Erro ao criar usuário", error: createUser.error });
+                return;
+            }
+        } catch (error) {
+            console.error("Erro interno ao criar usuário:", error);
+            res.status(500).json({ message: "Erro interno no servidor" });
+            return;
+        }
+    }
+
 
     static async putUsersWpp(req: Request, res: Response) {
-        const { id, name, cellphone } = req.body as Props;
-        const updateUser = await updateUserWpp(id, name, cellphone);
+        const { id, name, cellphone, base } = req.body as Props;
+        const updateUser = await updateUserWpp(id, name, cellphone, base);
         if (updateUser.success) {
-            res.json({ message: "Usuário atualizado com sucesso: ", id, name, cellphone });
-
+            { res.json({ message: "Usuário atualizado com sucesso: ", id, name, cellphone }); return; }
+            
         } else {
-            res.status(updateUser.statusCode).json({ message: "Não foi possível atualizar o usuário", error: updateUser.error });
+            { res.status(updateUser.statusCode).json({ message: "Não foi possível atualizar o usuário", error: updateUser.error }); return; }
 
         };
     };
